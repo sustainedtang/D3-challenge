@@ -27,6 +27,19 @@ var chartGroup = svg.append("g")
 //Initial params
 var chosenXAxis = "poverty";
 
+//update x-cale var upon click
+function xScale(stateData, chosenXAxis) {
+    // create scales
+    var xLinearScale = d3.scaleLinear()
+      .domain([d3.min(stateData, d => d[chosenXAxis]) * 0.8,
+        d3.max(stateData, d => d[chosenXAxis]) * 1.2
+      ])
+      .range([0, width]);
+  
+    return xLinearScale;
+  
+  }
+
 //updating x-scale var upon click on axis label? maybe not necessary
 //id, state, abbr, poverty, povertyMoe, age, agemoe, income, income moe
 //healthcare, healthlow,healthhigh, obesity, obesitylow, obesityhigh, smokes smokes low smokes high, -0.385218228(?)
@@ -36,7 +49,7 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     var label;
   
     if (chosenXAxis === "poverty") {
-      label = "Poverty:";
+      label = "In Poverty (%):";
     }
     else {
       label = "# of Albums:";
@@ -61,3 +74,5 @@ var toolTip = d3.tip()
 
   return circlesGroup;
 }
+
+
