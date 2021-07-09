@@ -132,14 +132,14 @@ d3.csv("data/statedata.csv")
 
     // append initial circles
     var circlesGroup = chartGroup
-      .selectAll("circle")
+      .selectAll(null)
       .data(stateData)
       .enter()
       .append("circle")
       .attr("cx", (d) => xLinearScale(d[chosenXAxis]))
       .attr("cy", (d) => yLinearScale(d.healthcare))
-      .attr("r", 20)
-      .attr("fill", "pink")
+      .attr("r", 12)
+      .attr("fill", "skyblue")
       .attr("opacity", ".5");
 
     // Create group for two x-axis labels
@@ -153,7 +153,7 @@ d3.csv("data/statedata.csv")
       .attr("y", 20)
       .attr("value", "poverty") // value to grab for event listener
       .classed("active", true)
-      .text("Poverty Rate (%):");
+      .text("Poverty Rate (%)");
 
     var obesityLabel = labelsGroup
       .append("text")
@@ -161,7 +161,7 @@ d3.csv("data/statedata.csv")
       .attr("y", 40)
       .attr("value", "obesity") // value to grab for event listener
       .classed("inactive", true)
-      .text("Obesity Rate (%):");
+      .text("Obesity Rate (%)");
 
     // append y axis
     chartGroup
@@ -171,6 +171,7 @@ d3.csv("data/statedata.csv")
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .classed("axis-text", true)
+      .classed("active", true)
       .text("Lacks Healthcare (%)");
 
     // updateToolTip function above csv import
