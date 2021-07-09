@@ -1,3 +1,4 @@
+
 var svgWidth = 960;
 var svgHeight = 500;
 
@@ -57,13 +58,33 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
     .transition()
     .duration(1000)
     .attr("cx", (d) => newXScale(d[chosenXAxis]));
+    // .attr("cy", (d) => newYScale(d.healthcare));
 
   return circlesGroup;
+}
+  
+
+function renderText(textGroup, newXScale, chosenXAxis) {
+  textGroup
+    .transition()
+    .duration(1000)
+    .attr("x", (d) => newXScale(d[chosenXAxis]));
+    // .attr("y", (d) => newYScale(d.healthcare));
+
+  return textGroup;
 }
 
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, circlesGroup) {
   var label;
+  
+  // import { createPopper } from '@popperjs/core';
+  // const popcorn = document.querySelector('#popcorn');
+  // const tooltip = document.querySelector('#tooltip');
+
+  // createPopper(popcorn, tooltip, {
+  //   placement: 'right',
+  // });
 
   if (chosenXAxis === "poverty") {
     label = "Poverty:";
@@ -75,7 +96,7 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   var toolTip = d3
     .tip()
     .attr("class", "tooltip")
-    .offset([10, 60])
+    .offset([80, -60])
     .html(function (d) {
       return `${d.state}<br>${label} ${d[chosenXAxis]}`;
     });
@@ -132,17 +153,26 @@ d3.csv("data/statedata.csv")
     chartGroup.append("g").call(leftAxis);
 
     // append initial circles
+    
+    
     var circlesGroup = chartGroup
-      .selectAll(null)
+      .selectAll("circle")
       .data(stateData)
       .enter()
       .append("circle")
       .attr("cx", (d) => xLinearScale(d[chosenXAxis]))
       .attr("cy", (d) => yLinearScale(d.healthcare))
-      .attr("r", 12)
-      .attr("fill", "skyblue")
-      .attr("opacity", ".5");
-      
+      .attr("r", 10)
+      .classed('stateCircle', true);
+    
+    var textGroup = chartGroup.append("g").selectAll('text')
+      .data(stateData)
+      .enter()
+      .append("text")
+      .attr("x", d => xLinearScale(d[chosenXAxis]))
+      .attr("y", d => yLinearScale(d.healthcare))
+      .classed('stateText', true)
+      .text(d => (d.abbr));
     
 
     // Create group for two x-axis labels
@@ -178,7 +208,8 @@ d3.csv("data/statedata.csv")
       .text("Lacks Healthcare (%)");
 
     // updateToolTip function above csv import
-    var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+    var circlesGroup = updateToolTip(chosenXAxis, circlesGroup, textGroup);
+    // var textGroup = updateToolTip(chosenXAxis, circlesGroup, textGroup);
 
     // x axis labels event listener
     labelsGroup.selectAll("text").on("click", function () {
@@ -199,6 +230,7 @@ d3.csv("data/statedata.csv")
 
         // updates circles with new x values
         circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis);
+        textGroup = renderText(textGroup, xLinearScale, chosenXAxis);
 
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
