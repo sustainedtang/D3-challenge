@@ -75,7 +75,7 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   var toolTip = d3
     .tip()
     .attr("class", "tooltip")
-    .offset([80, -60])
+    .offset([10, 60])
     .html(function (d) {
       return `${d.state}<br>${label} ${d[chosenXAxis]}`;
     });
@@ -84,7 +84,8 @@ function updateToolTip(chosenXAxis, circlesGroup) {
 
   circlesGroup
     .on("mouseover", function (data) {
-      toolTip.show(data);
+      toolTip.show(data, this);
+      
     })
     // onmouseout event
     .on("mouseout", function (data, index) {
@@ -141,12 +142,14 @@ d3.csv("data/statedata.csv")
       .attr("r", 12)
       .attr("fill", "skyblue")
       .attr("opacity", ".5");
+      
+    
 
     // Create group for two x-axis labels
     var labelsGroup = chartGroup
       .append("g")
       .attr("transform", `translate(${width / 2}, ${height + 20})`);
-
+    
     var povertyLabel = labelsGroup
       .append("text")
       .attr("x", 0)
